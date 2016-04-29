@@ -1,0 +1,48 @@
+elasticsearch:
+  container_name: elasticsearch
+  image: elasticsearch
+  restart: always
+  command: elasticsearch -Des.network.host=0.0.0.0
+  ports:
+    - "9200:9200"
+  volumes:
+    - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    - /data/elasticsearch:/usr/share/elasticsearch/data
+  environment:
+    - ES_HEAP_SIZE=7g
+    - MAX_OPEN_FILES=65535
+    - MAX_LOCKED_MEMORY=unlimited
+    
+logstash:
+  container_name: logstash
+  image: logstash
+  restart: always
+  command: logstash -w 2 -f /etc/logstash/conf.d/logstash.conf
+  volumes:
+    - ./config/logstash.conf:/etc/logstash/conf.d/logstash.conf
+    - /etc/ssl/:/etc/ssl:ro
+  ports:
+    - "5000:5000"
+  links:
+    - elasticsearch
+    
+statsd:
+  container_name: statsd
+  image: tarantegui/statsd
+  restart: always
+  ports:
+    - "8125:8125/udp"
+    - "8126:8126"
+  links:
+    - elasticsearch
+ 
+kibana:
+  container_name: kibana
+  image: tarantegui/kibana
+  restart: always
+  volumes:
+    - ./config/kibana.yml:/opt/kibana/config/kibana.yml
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch

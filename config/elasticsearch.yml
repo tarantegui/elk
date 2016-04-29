@@ -1,0 +1,5 @@
+cluster.name: elk-cluster
+node.name: logstash-01
+
+indices.fielddata.cache.size:  40%
+bootstrap.mlockall: true
