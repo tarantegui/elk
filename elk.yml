@@ -9,9 +9,9 @@ elasticsearch:
     - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     - /data/elasticsearch:/usr/share/elasticsearch/data
   environment:
-    - ES_HEAP_SIZE=7g
+    - ES_HEAP_SIZE=2g
     - MAX_OPEN_FILES=65535
-    - MAX_LOCKED_MEMORY=unlimited
+    #~ - MAX_LOCKED_MEMORY=unlimited
     
 logstash:
   container_name: logstash
